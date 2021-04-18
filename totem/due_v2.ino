@@ -12,17 +12,24 @@ const float head_max = 353.8;
 const float head_mid = 256.5;
 const float head_min = 182.6;
 
+#define AUTO 53
+#define MAN 51
+#define HOME 49
+#define PLAY 47
+#define TEST 45
+
 void setup() {
 
   Serial.begin(9600);   //Debug
   Serial3.begin(57600); //RS485 to motors
+  
   pinMode(A8, INPUT);   //from arduino DMX
 
-  pinMode(53, INPUT_PULLUP);
-  pinMode(52, INPUT_PULLUP);
-
-  pinMode(48, INPUT_PULLUP);
-  pinMode(49, INPUT_PULLUP);
+  pinMode(AUTO, INPUT_PULLUP);
+  pinMode(MAN, INPUT_PULLUP);
+  pinMode(HOME, INPUT_PULLUP);
+  pinMode(PLAY, INPUT_PULLUP);
+  pinMode(TEST, INPUT_PULLUP);
   
 }
 
@@ -43,15 +50,70 @@ unsigned long zeroT = 0;
 unsigned long testT = 0;
 
 void loop() {
-  
-  if ((!digitalRead(52) or !digitalRead(A8)) && !playOn) {
-    playOn = true;
-    startT = millis();
-    //CONDIZIONI INIZIALI
-    Serial.println("inizio"); 
-    i = 0;
-  }
 
+  if (!digitalRead(AUTO)) {
+    if ((!digitalRead(A8)) && !playOn) {
+      playOn = true;
+      startT = millis();
+      //CONDIZIONI INIZIALI
+      Serial.println("inizio da dmx"); 
+      i = 0;
+    }
+
+    if ((millis() - startT) > 200 && playOn && digitalRead(A8)) {
+      playOn = false;
+      //CONDIZIONI FINALI
+      Serial.println("finito da dmx");
+      Serial3.write('e');
+      Serial3.write('e');
+      Serial3.write('e');
+    }
+  }
+  else if (!digitalRead(MAN)) {
+    if ((!digitalRead(PLAY)) && !playOn) {
+      playOn = true;
+      startT = millis();
+      //CONDIZIONI INIZIALI
+      Serial.println("inizio man"); 
+      i = 0;
+    }
+
+    if ((millis() - startT) > 200 && playOn && digitalRead(PLAY)) {
+      playOn = false;
+      //CONDIZIONI FINALI
+      Serial.println("finito da man");
+      Serial3.write('e');
+      Serial3.write('e');
+      Serial3.write('e');
+    }
+
+    if (!zeroOn && !digitalRead(HOME)) {
+      zeroOn = true;
+      zeroT = millis();
+      Serial3.write('f');
+      Serial3.write('f');
+      Serial3.write('f');
+      Serial.println("go to home");
+    }
+  
+    if ((millis() - zeroT) > 1000 && zeroOn) {
+      zeroOn = false;
+    }
+  
+    if (!testOn && !digitalRead(TEST)) {
+      testOn = true;
+      testT = millis();
+      Serial3.write('m');
+      Serial3.write('m');
+      Serial3.write('m');
+      Serial.println("test motors");
+    }
+  
+    if ((millis() - testT) > 1000 && testOn) {
+      testOn = false;
+    }
+  }
+  
   if (playOn) {
     //DURANTE IL GIOCO
     if (i < total_frame) {
@@ -82,42 +144,6 @@ void loop() {
       Serial3.write('e');
       Serial3.write('e');
     }
-    
-  }
-
-  if ((millis() - startT) > 200 && playOn && (digitalRead(52))) {
-    playOn = false;
-    //CONDIZIONI FINALI
-    Serial.println("fine");
-    Serial3.write('e');
-    Serial3.write('e');
-    Serial3.write('e');
-  }
-
-  if (!zeroOn && !digitalRead(48)) {
-    zeroOn = true;
-    zeroT = millis();
-    Serial3.write('f');
-    Serial3.write('f');
-    Serial3.write('f');
-    Serial.println("ZERO");
-  }
-
-  if ((millis() - zeroT) > 1000 && zeroOn) {
-    zeroOn = false;
-  }
-
-  if (!testOn && !digitalRead(49)) {
-    testOn = true;
-    testT = millis();
-    Serial3.write('m');
-    Serial3.write('m');
-    Serial3.write('m');
-    Serial.println("TEST");
-  }
-
-  if ((millis() - testT) > 1000 && testOn) {
-    testOn = false;
   }
   
 }
