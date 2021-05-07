@@ -23,8 +23,8 @@ void setup() {
   ss.begin(57600);
   Serial.begin(9600);
 
-  stepper.setMaxSpeed(7000);
-  stepper.setAcceleration(10000);
+  stepper.setMaxSpeed(1000);
+  stepper.setAcceleration(2500);
   stepper.setCurrentPosition(0);
 }
 
@@ -40,23 +40,36 @@ bool man = false;
 
 void loop() {
   // put your main code here, to run repeatedly:
-  if (ss.available()) {
+  if (ss.available()>1) {
     inByte = ss.read();
     if (inByte == 'd') {
-      pos = ss.parseInt();
-      go = true;
+      inByte = ss.read();
+      if (inByte == 'D') {
+        pos = ss.parseInt();
+        go = true; 
+      }
     }
     else if (inByte == 'e') {
-      go = false;
-      Serial.println("FINE");
+      inByte = ss.read();
+      if (inByte == 'E') {
+        go = false;
+        Serial.println("FINE");
+      }
     }
     else if (inByte == 'f') {
-      zero = true;
-      Serial.println("ZERO");
+      inByte = ss.read();
+      if (inByte == 'F') {
+        zero = true;
+        Serial.println("ZERO");
+      }
     }
     else if (inByte == 'm') {
-      man = true;
-      Serial.println("TEST");
+      inByte = ss.read();
+      if (inByte == 'M') {
+        man = true;
+        Serial.println("TEST");
+      }
+
     }
   }
 
@@ -75,6 +88,8 @@ void loop() {
       zero = false;
     }
     else if (man) {
+      stepper.setMaxSpeed(700);
+      stepper.setAcceleration(3000);
       stepper.moveTo(900);
       while (stepper.distanceToGo() != 0) {
         stepper.run();
@@ -84,6 +99,8 @@ void loop() {
         stepper.run();
       }
       man = false;
+      stepper.setMaxSpeed(1000);
+      stepper.setAcceleration(2500);
     }
   }
     
