@@ -37,8 +37,8 @@ void setup() {
   pinMode(wavPlay, OUTPUT);
   pinMode(wavStop, OUTPUT);
 
-  digitalWrite(wavPlay, HIGH);
-  digitalWrite(wavStop, HIGH);
+  digitalWrite(wavPlay, LOW);
+  digitalWrite(wavStop, LOW);
   
 }
 
@@ -98,8 +98,8 @@ void checkState() {
     if (!digitalRead(AUTO)) {
       if ((!digitalRead(A8)) && !playOn) {
         playOn = true;
-        digitalWrite(wavPlay, LOW);
-        digitalWrite(wavStop, HIGH);
+        digitalWrite(wavPlay, HIGH);
+        digitalWrite(wavStop, LOW);
         startT = millis();
         //CONDIZIONI INIZIALI
         Serial.println("inizio da dmx"); 
@@ -108,8 +108,8 @@ void checkState() {
   
       if ((millis() - startT) > 200 && playOn && digitalRead(A8)) {
         playOn = false;
-        digitalWrite(wavPlay, HIGH);
-        digitalWrite(wavStop, LOW);
+        digitalWrite(wavPlay, LOW);
+        digitalWrite(wavStop, HIGH);
         //CONDIZIONI FINALI
         Serial.println("finito da dmx");
         Serial3.write("eE");
@@ -120,8 +120,8 @@ void checkState() {
     else if (!digitalRead(MAN)) {
       if ((!digitalRead(PLAY)) && !playOn) {
         playOn = true;
-        digitalWrite(wavPlay, LOW);
-        digitalWrite(wavStop, HIGH);
+        digitalWrite(wavPlay, HIGH);
+        digitalWrite(wavStop, LOW);
         startT = millis();
         //CONDIZIONI INIZIALI
         Serial.println("inizio man"); 
@@ -130,8 +130,8 @@ void checkState() {
   
       if ((millis() - startT) > 200 && playOn && digitalRead(PLAY)) {
         playOn = false;
-        digitalWrite(wavPlay, HIGH);
-        digitalWrite(wavStop, LOW);
+        digitalWrite(wavPlay, LOW);
+        digitalWrite(wavStop, HIGH);
         //CONDIZIONI FINALI
         Serial.println("finito da man");
         Serial3.write("eE");
