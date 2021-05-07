@@ -35,12 +35,12 @@ void setup() {
 
   pinMode(13, OUTPUT);
   digitalWrite(13, LOW);
-  //servo.Attach(13);
-  //servo.SetOutput(500, 1500, 2500);
+
 }
 
 long dt = 0;
 bool dd = true;
+
 
 char inByte;
 int pos = 0;
@@ -48,6 +48,7 @@ int pos = 0;
 bool go = false;
 bool zero = false;
 bool man = false;
+bool eend = false;
 
 bool first = false;
 
@@ -91,6 +92,7 @@ void loop() {
       if (inByte == 'E') {
         go = false;
         first = false;
+        eend = true;
         Serial.println("FINE");
         
       } 
@@ -100,13 +102,6 @@ void loop() {
       if (inByte == 'F') {
         zero = true;
         Serial.println("ZERO");
-        stepper.setMaxSpeed(400);
-        stepper.setAcceleration(1000);
-    
-        stepper.moveTo(0);
-
-        stepper.setMaxSpeed(7000);
-        stepper.setAcceleration(10000);
       } 
     } 
     else if (inByte == 'm') {
@@ -133,11 +128,17 @@ void loop() {
   }
   else {
     if (zero) {
-      while (digitalRead(A0)) {
-        stepper.move(-1);
+      stepper.setMaxSpeed(400);
+      stepper.setAcceleration(1000);
+    
+      stepper.moveTo(0);
+
+      while (stepper.distanceToGo() != 0) {
         stepper.run();
       }
-      stepper.setCurrentPosition(215);
+      stepper.setMaxSpeed(7000);
+      stepper.setAcceleration(10000);
+      //stepper.setCurrentPosition(215);
       zero = false;
     }
     else if (man) {
@@ -160,6 +161,14 @@ void loop() {
       stepper.setAcceleration(10000);
       man = false;
     }
+    else if (eend) {
+      stepper.moveTo(215);
+      while (stepper.distanceToGo() != 0) {
+        stepper.run();
+      }
+      eend = false;
+    }
+
   }
     
 }
