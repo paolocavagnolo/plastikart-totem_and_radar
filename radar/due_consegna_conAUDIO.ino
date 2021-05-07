@@ -48,8 +48,8 @@ void setup() {
   pinMode(wavPlay, OUTPUT);
   pinMode(wavStop, OUTPUT);
 
-  digitalWrite(wavPlay, HIGH);
-  digitalWrite(wavStop, HIGH);
+  digitalWrite(wavPlay, LOW);
+  digitalWrite(wavStop, LOW);
 
   Serial.begin(9600);
 
@@ -112,25 +112,25 @@ void checkState() {
     if (!digitalRead(autt)) {
       if (!digitalRead(dmx_pin)) {
         goB = true;
-        digitalWrite(wavPlay, LOW);
-        digitalWrite(wavStop, HIGH);
+        digitalWrite(wavPlay, HIGH);
+        digitalWrite(wavStop, LOW);
       }
       else {
         goB = false;
-        digitalWrite(wavPlay, HIGH);
-        digitalWrite(wavStop, LOW);
+        digitalWrite(wavPlay, LOW);
+        digitalWrite(wavStop, HIGH);
       }
     }
     else if (!digitalRead(mann)) {
       if (!digitalRead(play)) {
         goB = true;
-        digitalWrite(wavPlay, LOW);
-        digitalWrite(wavStop, HIGH);
+        digitalWrite(wavPlay, HIGH);
+        digitalWrite(wavStop, LOW);
       }
       else {
         goB = false;
-        digitalWrite(wavPlay, HIGH);
-        digitalWrite(wavStop, LOW);
+        digitalWrite(wavPlay, LOW);
+        digitalWrite(wavStop, HIGH);
         if (!digitalRead(test1)) {
           test1B = true;
         }
@@ -235,4 +235,3 @@ void goPlay() {
   }
   
 }
-\
