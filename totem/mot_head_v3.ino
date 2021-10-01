@@ -26,7 +26,7 @@ void setup() {
   stepper.setEnablePin(6);
 
 
-  ss.begin(57600);
+  ss.begin(38400);
   Serial.begin(9600);
 
   stepper.setMaxSpeed(1000);
