@@ -9,14 +9,23 @@ void setup() {
   
 }
 
+bool state = true;
+
 void loop() {
 
   if (digitalRead(5)) {
-    myservo.write(90); 
+    if (state) {
+      myservo.write(90);
+      state = false;
+      delay(600);
+    }
   }
   else {
-    myservo.write(0);
+    if (!state) {
+      myservo.write(0);
+      state = true;
+      delay(600);
+    }
   }
-
-  delay(50);
+  
 }
