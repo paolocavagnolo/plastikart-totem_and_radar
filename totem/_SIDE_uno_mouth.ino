@@ -3,9 +3,16 @@
 Servo myservo;  
 
 void setup() {
+
+  delay(100);
   
-  myservo.attach(9);   
+  myservo.attach(9);  
+
+  delay(100);
+  
   pinMode(5, INPUT);
+  
+  myservo.write(0);
   
 }
 
