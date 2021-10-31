@@ -147,6 +147,8 @@ void loop() {
     
     tRemote = millis();
     tMan = millis();
+    tDmxPlay = millis();
+    tDmxStop = millis();
     
     if ((millis() - tPlay) > LEN) {
       if (firstPlay) {
@@ -162,6 +164,7 @@ void loop() {
         bPlay = true;
         bRemote = false;
         bMan = false; 
+        bDmx = false;
         
         //END PLAY COMMAND
         
@@ -207,6 +210,8 @@ void loop() {
 
       tPlay = millis();
       tRemote = millis();
+      tDmxPlay = millis();
+      tDmxStop = millis();
 
       if ((millis() - tMan) > LEN) {   
         if (firstMan) {
@@ -220,6 +225,7 @@ void loop() {
           bMan = true;
           bPlay = false;
           bRemote = false;
+          bDmx = false;
           
           //END MAN COMMAND
           
@@ -267,7 +273,7 @@ void loop() {
     }
   }
 
-
+  
   if (bPlay || bDmx) {
   //condizioni di play  
     if (bFirstPlay) {
